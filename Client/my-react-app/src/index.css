@@ -127,3 +127,42 @@ body {
 .addSong{
   margin-top: 0px;
 }
+
+/* song and songlist components */
+
+.song-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 50%; /* Adjust the width to your preference */
+  margin: 0 auto; /* Center the container on the page */
+  max-width: 640px; /* Set a max-width if you want a consistent sizing on larger screens */
+  /* Add padding if needed, for example: */
+  padding: 20px;
+  margin-top: 200px;
+  margin-left: 20px;
+}
+
+.song-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #fff;
+  /* If you want to make the song containers "tighter", you can reduce the padding here */
+}
+
+
+.song-details h3, .song-details p {
+  margin: 0;
+}
+
+.play-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
