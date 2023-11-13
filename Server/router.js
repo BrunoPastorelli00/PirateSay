@@ -1,12 +1,12 @@
-const router = require("express").Router;
-const controller = require("./controller");
+const express = require('express');
+const controller = require('./controller');
+const router = express.Router();
+const upload = require("./middlewares/multer");
 
 
-// Show songList on the page
-router.get("/", controller.songList);
-//post new song to the database.
-router.post("/add", controller.addSong);
+// Define routes
+router.post('/upload', upload.single('songFile'), controller.uploadSong);
+router.get('/', controller.getAllSongs);
+router.route("/dowload/:id").get(controller.downloadSong)
 
 module.exports = router;
-
-

@@ -1,12 +1,9 @@
 const songs = require("./db");
-const schema = songs.Schema;
 
-const songSchema = new schema ({
+const songSchema = new songs.Schema({
     songName: String,
     artist: String,
-    url: String
+    songFile: String
 });
 
-const Song = songs.model("Song", songSchema);
-
-module.exports = Song;
+module.exports = songs.model('Song', songSchema);

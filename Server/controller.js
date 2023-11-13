@@ -1,13 +1,33 @@
 const Song = require("./models/songs");
+const path = require("path");
+const assyncWrapper = require('./middlewares/asyncWrapper');
 
-exports.eventList =  async (req, res) => {
-    const songs = await Song.find();
+exports.getAllSongs = async (req, res) => {
     try {
-        res.status(200).json(songs)
+        const songs = await Song.find();
+        res
+        .status(200)
+        .json(songs);
     } catch (error) {
-        res.status(500).json({error: "Couldn't fetch the song"})
+        console.log(error);
     }
-}
+};
 
+exports.uploadSong = assyncWrapper(async(req, res) => {
+    const {songName} = req.body;
+    const {artist} = req.body;
+    const songFile = req.file.path; // Instead of req.body.path
+    const song = await Song.create({songName, artist, songFile});
+    res.status(201).json({song})
+})
 
-
+exports.downloadSong = assyncWrapper(async(req, res) => {
+    const {id} = req.params;
+    const song = await Song.findById(id);
+    if(!song) {
+        return next(new Error("No song found"))
+    }
+    const songFile = song.songFile;
+    const filePath = path.join(__dirname, `../${songFile}`);
+    res.download(filePath);
+})

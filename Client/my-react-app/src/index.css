@@ -1,0 +1,129 @@
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background-color: #1C1B1B;
+  background-image: url('./images/background.png'); /* Assuming this path is correct */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+}
+
+/* Logo component*/
+
+.logo {
+  position: absolute; /* Absolute positioning with respect to the nearest positioned ancestor */
+  top: 0; /* Align to the top */
+  left: 0; /* Align to the left */
+  width: 194px; /* Set the width */
+  height: auto; /* Keep the original aspect ratio */
+}
+
+/* If you still need the .logobox class for some reason */
+.logobox {
+  position: fixed; /* Fixed or absolute, depending on whether you want it to scroll with the page */
+  top: 10px;
+  left: 10px ;
+  width: 100%; /* Full width to use the entire top as a header bar if that's your design */
+  height: 200px; /* Fixed height */
+  background: transparent; /* Ensures the background is transparent */
+  z-index: 1000; /* Ensures the logo box is above other elements */
+}
+
+/*AddSongForm component*/
+
+.add-song-form {
+  position: fixed; /* or absolute, depending on how you want to position it */
+  right: 50px; /* adjust as necessary for your layout */
+  top: 150px; /* adjust as necessary for your layout */
+  height: 428px;
+  width: 291px; /* adjust width as per your design */
+  background: transparent; /* Fully transparent background */
+  border: 1px solid #11FF46; /* white border, adjust as needed */
+  padding: 20px; /* adds space inside the form, adjust as needed */
+  border-radius: 10px; /* rounded corners, adjust as needed */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* optional shadow for depth */
+  z-index: 10; /* ensure it's above other elements */
+  color: #ffffff; /* text color, assuming you want it white */
+  font-size: 16px; /* adjust as needed */
+}
+
+.add-song-form label {
+  display: block; /* ensures the label is on its own line */
+  margin-bottom: 20px; /* space between label and input */
+  color: #fff; /* text color for the label */
+  margin-top: 18px;
+}
+
+.add-song-form input[type="text"],
+.add-song-form input[type="file"] {
+  width: 80%; /* full width */
+  padding: 8px; /* padding inside the input */
+  margin-bottom: 30px; /* space after the input */
+  border-radius: 4px; /* rounded borders for the input fields */
+  border: 1px solid #ffffff; /* border color */
+  background: rgba(255, 255, 255, 0.1); /* slightly translucent inputs */
+  color: #fff; /* input text color */
+}
+
+.add-song-form input[type="submit"] {
+  margin-left: 40%;
+  margin-top: -20px;
+}
+
+/*SearchBar Component */
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Adjust to position the container accordingly */
+
+}
+
+.search-input {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #11FF46; /* Border color to match your theme */
+  border-radius: 10px 0 0 10px; /* Rounded corners on the left side */
+  outline: none;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1); /* Translucent background */
+  width: 330px; /* Adjust the width as needed */
+  margin-right: -2px; /* Overlaps the button border */
+  margin-top: 30px;
+
+}
+
+.search-button {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #11FF46; /* Border color to match your theme */
+  border-left: none; /* Removes the left border */
+  border-radius: 0 10px 10px 0; /* Rounded corners on the right side */
+  background: #11FF46;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  margin-top: 30px;
+
+}
+
+.search-button:hover {
+  background: #0FAF3F; /* Darker green background on hover */
+}
+
+.addSong{
+  margin-top: 0px;
+}
