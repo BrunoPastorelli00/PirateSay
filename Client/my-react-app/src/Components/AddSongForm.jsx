@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 
 function AddSongForm() {
-  const [songName, setSongName] = useState('');
-  const [artist, setArtist] = useState('');
+  const [songName, setSongName] = useState("");
+  const [artist, setArtist] = useState("");
   const [songFile, setSongFile] = useState(null);
   const fileInputRef = useRef(null); // Create a ref for the file input
 
@@ -10,35 +10,35 @@ function AddSongForm() {
     e.preventDefault();
 
     if (!songName || !artist || !songFile) {
-      alert('Please fill in all fields and select a file before submitting');
+      alert("Please fill in all fields and select a file before submitting");
       return;
     }
 
     const formData = new FormData();
-    formData.append('songName', songName);
-    formData.append('artist', artist);
-    formData.append('songFile', songFile);
+    formData.append("songName", songName);
+    formData.append("artist", artist);
+    formData.append("songFile", songFile);
 
-    fetch('http://localhost:3232/upload', {
-      method: 'POST',
+    fetch("http://localhost:3232/upload", {
+      method: "POST",
       body: formData,
     })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('Song uploaded', data);
-      resetForm();
-    })
-    .catch((error) => {
-      console.error('Error uploading song', error);
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Song uploaded", data);
+        resetForm();
+      })
+      .catch((error) => {
+        console.error("Error uploading song", error);
+      });
   };
 
   const resetForm = () => {
-    setSongName('');
-    setArtist('');
+    setSongName("");
+    setArtist("");
     setSongFile(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''; // Reset the file input field
+      fileInputRef.current.value = ""; // Reset the file input field
     }
   };
 
@@ -81,7 +81,9 @@ function AddSongForm() {
           />
         </div>
 
-        <button className='uploadSongButton'  type="submit">Upload Song</button>
+        <button className="uploadSongButton" type="submit">
+          Upload Song
+        </button>
       </form>
     </div>
   );

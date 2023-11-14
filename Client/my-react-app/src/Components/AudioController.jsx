@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function AudioController({ isPlaying, onTogglePlay, onVolumeChange }) {
   const handlePlayPause = () => {
@@ -11,17 +11,15 @@ function AudioController({ isPlaying, onTogglePlay, onVolumeChange }) {
 
   return (
     <div className="audio-controller">
-      <button onClick={handlePlayPause}>
-        {isPlaying ? '⏸️' : '▶️'}
-      </button>
-      <input 
-    type="range" 
-    min="0" 
-    max="1" 
-    step="0.01" 
-    onChange={handleVolumeChange} 
-    value={volume} // Use the passed volume prop
-/>
+      <button onClick={handlePlayPause}>{isPlaying ? "⏸️" : "▶️"}</button>
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        onChange={handleVolumeChange}
+        value={volume} // Use the passed volume prop
+      />
     </div>
   );
 }

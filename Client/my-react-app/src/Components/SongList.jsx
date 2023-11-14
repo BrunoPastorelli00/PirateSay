@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Song from './Song';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import Song from "./Song";
 
 function SongList({ searchTerm }) {
   const [songs, setSongs] = useState([]);
@@ -11,47 +11,55 @@ function SongList({ searchTerm }) {
   const audioRef = useRef(new Audio());
 
   const shuffleSongs = useCallback((array) => {
-    let currentIndex = array.length, randomIndex;
+    let currentIndex = array.length,
+      randomIndex;
     while (currentIndex !== 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
       [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+        array[randomIndex],
+        array[currentIndex],
+      ];
     }
     return array;
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:3232/')
-      .then(response => response.json())
-      .then(data => {
+    fetch("http://localhost:3232/")
+      .then((response) => response.json())
+      .then((data) => {
         const shuffledSongs = shuffleSongs([...data]);
         setSongs(shuffledSongs);
       })
-      .catch(error => console.error('Error fetching songs:', error));
+      .catch((error) => console.error("Error fetching songs:", error));
   }, [shuffleSongs]);
 
-  const handlePlay = useCallback((songData) => {
-    const songUrl = `http://localhost:3232/uploads/${songData.songFile}`;
-    if (!currentSong || currentSong._id !== songData._id) {
+  const handlePlay = useCallback(
+    (songData) => {
+      const songUrl = `http://localhost:3232/uploads/${songData.songFile}`;
+      if (!currentSong || currentSong._id !== songData._id) {
         audioRef.current.src = songUrl;
         setLastPlayed(songData);
         setCurrentSong(songData);
         setVolume(0.5); // Set volume to 50% when a new song is loaded
         audioRef.current.volume = 0.5; // Also set the audio element's volume
-    }
+      }
 
-    if (audioRef.current.paused) {
+      if (audioRef.current.paused) {
         audioRef.current.play();
         setIsCurrentlyPlaying(true);
-    } else {
+      } else {
         audioRef.current.pause();
         setIsCurrentlyPlaying(false);
-    }
-}, [currentSong]);
+      }
+    },
+    [currentSong]
+  );
 
   const playNextSong = useCallback(() => {
-    const currentSongIndex = songs.findIndex(song => song._id === currentSong._id);
+    const currentSongIndex = songs.findIndex(
+      (song) => song._id === currentSong._id
+    );
     const nextSong = songs[currentSongIndex + 1];
 
     if (nextSong) {
@@ -64,26 +72,26 @@ function SongList({ searchTerm }) {
 
   useEffect(() => {
     const audio = audioRef.current;
-    audio.addEventListener('ended', playNextSong);
+    audio.addEventListener("ended", playNextSong);
 
     return () => {
-      audio.removeEventListener('ended', playNextSong);
+      audio.removeEventListener("ended", playNextSong);
     };
   }, [playNextSong]);
 
   useEffect(() => {
-  const audio = audioRef.current;
-  audio.addEventListener('ended', playNextSong);
+    const audio = audioRef.current;
+    audio.addEventListener("ended", playNextSong);
 
-  // Set the volume to 50% whenever a new song is about to play
-  const setVolumeToHalf = () => setVolume(0.5);
-  audio.addEventListener('loadeddata', setVolumeToHalf);
+    // Set the volume to 50% whenever a new song is about to play
+    const setVolumeToHalf = () => setVolume(0.5);
+    audio.addEventListener("loadeddata", setVolumeToHalf);
 
-  return () => {
-    audio.removeEventListener('ended', playNextSong);
-    audio.removeEventListener('loadeddata', setVolumeToHalf);
-  };
-}, [playNextSong]);
+    return () => {
+      audio.removeEventListener("ended", playNextSong);
+      audio.removeEventListener("loadeddata", setVolumeToHalf);
+    };
+  }, [playNextSong]);
 
   useEffect(() => {
     const updateProgress = () => {
@@ -93,11 +101,11 @@ function SongList({ searchTerm }) {
     };
 
     if (isCurrentlyPlaying) {
-      audioRef.current.addEventListener('timeupdate', updateProgress);
+      audioRef.current.addEventListener("timeupdate", updateProgress);
     }
 
     return () => {
-      audioRef.current.removeEventListener('timeupdate', updateProgress);
+      audioRef.current.removeEventListener("timeupdate", updateProgress);
     };
   }, [isCurrentlyPlaying]);
 
@@ -116,15 +124,21 @@ function SongList({ searchTerm }) {
     const newVolume = e.target.value;
     setVolume(newVolume);
     audioRef.current.volume = newVolume; // Update the audio element's volume
-};
+  };
 
-  const isPlaying = useCallback((songData) => {
-    return currentSong && songData._id === currentSong._id && isCurrentlyPlaying;
-  }, [currentSong, isCurrentlyPlaying]);
+  const isPlaying = useCallback(
+    (songData) => {
+      return (
+        currentSong && songData._id === currentSong._id && isCurrentlyPlaying
+      );
+    },
+    [currentSong, isCurrentlyPlaying]
+  );
 
-  const filteredSongs = songs.filter(song =>
-    song.songName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    song.artist.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredSongs = songs.filter(
+    (song) =>
+      song.songName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      song.artist.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedSongs = filteredSongs.sort((a, b) => {
@@ -139,7 +153,7 @@ function SongList({ searchTerm }) {
     <div className="song-list">
       {sortedSongs.map((song, index) => (
         <React.Fragment key={song._id || index}>
-          <Song 
+          <Song
             songData={song}
             onPlay={() => handlePlay(song)}
             isPlaying={isPlaying(song)}
@@ -150,13 +164,13 @@ function SongList({ searchTerm }) {
             <div className="audio-controls">
               <div className="volume-control">
                 <label htmlFor="volume-slider">Volume:</label>
-                <input 
+                <input
                   id="volume-slider"
-                  type="range" 
-                  className="volume-slider" 
-                  min="0" 
-                  max="1" 
-                  step="0.01" 
+                  type="range"
+                  className="volume-slider"
+                  min="0"
+                  max="1"
+                  step="0.01"
                   value={volume}
                   onChange={handleVolumeChange}
                 />

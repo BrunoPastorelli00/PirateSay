@@ -9,13 +9,23 @@ function Song({ songData, onPlay, isPlaying, isLastPlayed, audioRef }) {
         <p>{songData.artist}</p>
       </div>
       <div className="song-controls">
-        <button className="play-pause-button" onClick={(e) => {
-          e.stopPropagation(); 
-          onPlay(songData);
-        }}>
-          {isPlaying ? '⏸️' : '▶️'}
+        <button
+          className="play-pause-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onPlay(songData);
+          }}
+        >
+          {isPlaying ? "⏸️" : "▶️"}
         </button>
-        <a href={downloadSongUrl} download className="download-button" onClick={(e) => e.stopPropagation()}>Download</a>
+        <a
+          href={downloadSongUrl}
+          download
+          className="download-button"
+          onClick={(e) => e.stopPropagation()}
+        >
+          Download
+        </a>
       </div>
     </div>
   );
