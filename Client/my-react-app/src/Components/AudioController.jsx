@@ -15,13 +15,13 @@ function AudioController({ isPlaying, onTogglePlay, onVolumeChange }) {
         {isPlaying ? '⏸️' : '▶️'}
       </button>
       <input 
-        type="range" 
-        min="0" 
-        max="1" 
-        step="0.01" 
-        onChange={handleVolumeChange} 
-        defaultValue="1"
-      />
+    type="range" 
+    min="0" 
+    max="1" 
+    step="0.01" 
+    onChange={handleVolumeChange} 
+    value={volume} // Use the passed volume prop
+/>
     </div>
   );
 }

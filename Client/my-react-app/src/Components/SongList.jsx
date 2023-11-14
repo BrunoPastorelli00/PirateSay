@@ -34,20 +34,21 @@ function SongList({ searchTerm }) {
   const handlePlay = useCallback((songData) => {
     const songUrl = `http://localhost:3232/uploads/${songData.songFile}`;
     if (!currentSong || currentSong._id !== songData._id) {
-      audioRef.current.src = songUrl;
-      setLastPlayed(songData);
-      setCurrentSong(songData);
-      setVolume(0.5); // Set volume to 50% when a new song is loaded
+        audioRef.current.src = songUrl;
+        setLastPlayed(songData);
+        setCurrentSong(songData);
+        setVolume(0.5); // Set volume to 50% when a new song is loaded
+        audioRef.current.volume = 0.5; // Also set the audio element's volume
     }
-  
+
     if (audioRef.current.paused) {
-      audioRef.current.play();
-      setIsCurrentlyPlaying(true);
+        audioRef.current.play();
+        setIsCurrentlyPlaying(true);
     } else {
-      audioRef.current.pause();
-      setIsCurrentlyPlaying(false);
+        audioRef.current.pause();
+        setIsCurrentlyPlaying(false);
     }
-  }, [currentSong]);
+}, [currentSong]);
 
   const playNextSong = useCallback(() => {
     const currentSongIndex = songs.findIndex(song => song._id === currentSong._id);
@@ -112,8 +113,10 @@ function SongList({ searchTerm }) {
   };
 
   const handleVolumeChange = (e) => {
-    setVolume(e.target.value);
-  };
+    const newVolume = e.target.value;
+    setVolume(newVolume);
+    audioRef.current.volume = newVolume; // Update the audio element's volume
+};
 
   const isPlaying = useCallback((songData) => {
     return currentSong && songData._id === currentSong._id && isCurrentlyPlaying;
