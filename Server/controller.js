@@ -68,3 +68,25 @@ exports.downloadSong = asyncWrapper(async (req, res, next) => {
     const filePath = path.join(__dirname, '../uploads', song.songFile);
     res.download(filePath);
 });
+
+exports.searchSongs = asyncWrapper(async (req, res) => {
+    const searchTerm = req.query.term;
+    if (!searchTerm) {
+        return res.status(400).json({ error: 'No search term provided' });
+    }
+
+    try {
+        // Modify this query as needed to search in desired fields
+        const songs = await Song.find({
+            $or: [
+                { songName: { $regex: searchTerm, $options: 'i' } },
+                { artist: { $regex: searchTerm, $options: 'i' } }
+            ]
+        });
+
+        res.status(200).json(songs);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+});

@@ -1,50 +1,178 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Song from './Song';
 
-function SongList() {
+function SongList({ searchTerm }) {
   const [songs, setSongs] = useState([]);
   const [currentSong, setCurrentSong] = useState(null);
+  const [lastPlayed, setLastPlayed] = useState(null);
+  const [isCurrentlyPlaying, setIsCurrentlyPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [volume, setVolume] = useState(1);
   const audioRef = useRef(new Audio());
 
-  useEffect(() => {
-    fetch('http://localhost:3232/') // Fetch the list of songs
-      .then(response => response.json())
-      .then(data => {
-        console.log(data); // Log to inspect the data
-        setSongs(data);
-      })
-      .catch(error => console.error('Error fetching songs:', error));
+  const shuffleSongs = useCallback((array) => {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+    return array;
   }, []);
 
-  const handlePlay = (songData) => {
-    const songUrl = `http://localhost:3232/uploads/${songData.songFile}`; // Construct the URL to access the song file
+  useEffect(() => {
+    fetch('http://localhost:3232/')
+      .then(response => response.json())
+      .then(data => {
+        const shuffledSongs = shuffleSongs([...data]);
+        setSongs(shuffledSongs);
+      })
+      .catch(error => console.error('Error fetching songs:', error));
+  }, [shuffleSongs]);
 
-    if (currentSong && currentSong._id === songData._id) {
-      // Toggle play/pause if the current song is clicked again
-      if (audioRef.current.paused) {
-        audioRef.current.play();
-      } else {
-        audioRef.current.pause();
-      }
-    } else {
-      // If a new song is clicked, change the current song and play it
-      if (currentSong) {
-        audioRef.current.pause();
-      }
-      audioRef.current.src = songUrl; // Update the audio source
-      audioRef.current.play();
+  const handlePlay = useCallback((songData) => {
+    const songUrl = `http://localhost:3232/uploads/${songData.songFile}`;
+    if (!currentSong || currentSong._id !== songData._id) {
+      audioRef.current.src = songUrl;
+      setLastPlayed(songData);
       setCurrentSong(songData);
+      setVolume(0.5); // Set volume to 50% when a new song is loaded
+    }
+  
+    if (audioRef.current.paused) {
+      audioRef.current.play();
+      setIsCurrentlyPlaying(true);
+    } else {
+      audioRef.current.pause();
+      setIsCurrentlyPlaying(false);
+    }
+  }, [currentSong]);
+
+  const playNextSong = useCallback(() => {
+    const currentSongIndex = songs.findIndex(song => song._id === currentSong._id);
+    const nextSong = songs[currentSongIndex + 1];
+
+    if (nextSong) {
+      handlePlay(nextSong);
+    } else {
+      setCurrentSong(null);
+      setIsCurrentlyPlaying(false);
+    }
+  }, [currentSong, songs, handlePlay]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    audio.addEventListener('ended', playNextSong);
+
+    return () => {
+      audio.removeEventListener('ended', playNextSong);
+    };
+  }, [playNextSong]);
+
+  useEffect(() => {
+  const audio = audioRef.current;
+  audio.addEventListener('ended', playNextSong);
+
+  // Set the volume to 50% whenever a new song is about to play
+  const setVolumeToHalf = () => setVolume(0.5);
+  audio.addEventListener('loadeddata', setVolumeToHalf);
+
+  return () => {
+    audio.removeEventListener('ended', playNextSong);
+    audio.removeEventListener('loadeddata', setVolumeToHalf);
+  };
+}, [playNextSong]);
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const duration = audioRef.current.duration;
+      const currentTime = audioRef.current.currentTime;
+      setProgress((currentTime / duration) * 100);
+    };
+
+    if (isCurrentlyPlaying) {
+      audioRef.current.addEventListener('timeupdate', updateProgress);
+    }
+
+    return () => {
+      audioRef.current.removeEventListener('timeupdate', updateProgress);
+    };
+  }, [isCurrentlyPlaying]);
+
+  const handleProgressChange = (e) => {
+    const newProgress = e.target.value;
+    const duration = audioRef.current.duration;
+    audioRef.current.currentTime = (newProgress / 100) * duration;
+    setProgress(newProgress);
+
+    if (!audioRef.current.paused) {
+      audioRef.current.play();
     }
   };
 
+  const handleVolumeChange = (e) => {
+    setVolume(e.target.value);
+  };
+
+  const isPlaying = useCallback((songData) => {
+    return currentSong && songData._id === currentSong._id && isCurrentlyPlaying;
+  }, [currentSong, isCurrentlyPlaying]);
+
+  const filteredSongs = songs.filter(song =>
+    song.songName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    song.artist.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const sortedSongs = filteredSongs.sort((a, b) => {
+    if (isPlaying(a)) return -1;
+    if (isPlaying(b)) return 1;
+    if (lastPlayed && a._id === lastPlayed._id) return -1;
+    if (lastPlayed && b._id === lastPlayed._id) return 1;
+    return 0;
+  });
+
   return (
     <div className="song-list">
-      {songs.map((song, index) => (
-        <Song 
-          key={song._id || index}  // Use song _id or fallback to index
-          songData={song}
-          onPlay={() => handlePlay(song)}
-        />
+      {sortedSongs.map((song, index) => (
+        <React.Fragment key={song._id || index}>
+          <Song 
+            songData={song}
+            onPlay={() => handlePlay(song)}
+            isPlaying={isPlaying(song)}
+            isLastPlayed={lastPlayed && song._id === lastPlayed._id}
+            audioRef={audioRef}
+          />
+          {isPlaying(song) && (
+            <div className="audio-controls">
+              <div className="volume-control">
+                <label htmlFor="volume-slider">Volume:</label>
+                <input 
+                  id="volume-slider"
+                  type="range" 
+                  className="volume-slider" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value={volume}
+                  onChange={handleVolumeChange}
+                />
+              </div>
+              <div className="progress-control">
+                <label htmlFor="progress-bar">Track Progress:</label>
+                <input
+                  id="progress-bar"
+                  type="range"
+                  className="progress-bar"
+                  min="0"
+                  max="100"
+                  value={progress}
+                  onChange={handleProgressChange}
+                />
+              </div>
+            </div>
+          )}
+        </React.Fragment>
       ))}
     </div>
   );

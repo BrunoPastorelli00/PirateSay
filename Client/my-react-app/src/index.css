@@ -13,11 +13,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   background-color: #1C1B1B;
-  background-image: url('./images/background.png'); /* Assuming this path is correct */
-  background-size: contain;
+  background-image: url('./images/background.png'); /* Reverting back to your original path */
+  background-size: contain; /* Reset to 'contain' to show the full image as before */
   background-repeat: no-repeat;
-  background-position: center;
-  height: 100vh;
+  background-position: center; /* Centered as per your original style */
+  height: 100vh; /* Full viewport height */
+  width: 100vw; /* Full viewport width */
+  overflow: hidden; /* Hide overflow to prevent scrolling */
 }
 
 /* Logo component*/
@@ -28,6 +30,7 @@ body {
   left: 0; /* Align to the left */
   width: 194px; /* Set the width */
   height: auto; /* Keep the original aspect ratio */
+  z-index: 2;
 }
 
 /* If you still need the .logobox class for some reason */
@@ -77,87 +80,70 @@ body {
   color: #fff; /* input text color */
 }
 
-.add-song-form input[type="submit"] {
-  margin-left: 40%;
-  margin-top: -20px;
+.uploadSongButton {
+  margin-left: 30%;
+  margin-top: -20%;
 }
 
 /*SearchBar Component */
 
-.search-bar-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px; /* Adjust to position the container accordingly */
+/* You may need to adjust other styles for alignment, size, etc., based on your specific layout */
 
-}
-
-.search-input {
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #11FF46; /* Border color to match your theme */
-  border-radius: 10px 0 0 10px; /* Rounded corners on the left side */
-  outline: none;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1); /* Translucent background */
-  width: 330px; /* Adjust the width as needed */
-  margin-right: -2px; /* Overlaps the button border */
-  margin-top: 30px;
-
-}
-
-.search-button {
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #11FF46; /* Border color to match your theme */
-  border-left: none; /* Removes the left border */
-  border-radius: 0 10px 10px 0; /* Rounded corners on the right side */
-  background: #11FF46;
-  color: #fff;
-  cursor: pointer;
-  outline: none;
-  margin-top: 30px;
-
-}
-
-.search-button:hover {
-  background: #0FAF3F; /* Darker green background on hover */
-}
 
 .addSong{
   margin-top: 0px;
 }
 
 /* song and songlist components */
+.song-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.song-list {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 
 .song-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 50%; /* Adjust the width to your preference */
-  margin: 0 auto; /* Center the container on the page */
-  max-width: 640px; /* Set a max-width if you want a consistent sizing on larger screens */
-  /* Add padding if needed, for example: */
-  padding: 20px;
-  margin-top: 200px;
-  margin-left: 20px;
+  position: fixed; /* Keeps the song list fixed in place */
+  top: 185px; /* Adjust this to position the list below your logo and other fixed elements */
+  left: 20px; /* Adjust as needed, provides a gap from the left side */
+  width: 50%; /* Adjust the width as per your preference */
+  max-height: calc(100vh - 220px); /* Adjust based on top position and any additional space needed at the bottom */
+  overflow-y: auto; /* Adds scrollbar when content overflows */
+  z-index: 1; /* Ensures the song list is above the background but below other fixed elements */
+  /* Other styling remains the same */
 }
 
 .song-container {
+  width: 70%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 5px; /* Reduced padding for a tighter container */
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  border-radius: 10px;
   color: #fff;
-  /* If you want to make the song containers "tighter", you can reduce the padding here */
+  box-shadow: 3px 3px 4px #353535;
+  margin-top: 2%; /* Reduced margin-top for less space between containers */
+  margin-bottom: 2%; /* Optional: if you want to add space at the bottom */
+  font-size: 0.9em; /* Optional: adjust font size for content within the container */
 }
-
 
 .song-details h3, .song-details p {
   margin: 0;
+  padding: 2px 0; /* Reduced padding for a tighter layout */
 }
+
+.play-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 16px; /* Adjusted font size for play button */
+  cursor: pointer;
+}
+
 
 .play-button {
   background: none;
@@ -165,4 +151,220 @@ body {
   color: #fff;
   font-size: 20px;
   cursor: pointer;
+}
+
+.song-container.playing {
+  border: 3px solid #11FF46; /* Adjust the shadow size and spread as needed */
+}
+
+.play-pause-button {
+  background-color: rgb(11, 188, 188) ;
+}
+
+.volume-slider {
+  width: 80px; /* Adjust as needed */
+  height: 5px;
+  border-radius: 5px;
+  background: #ddd;
+  outline: none;
+}
+
+/* Styles for WebKit/Blink */
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  background: #ddd;
+  border-radius: 5px;
+}
+
+/* Styles for Firefox */
+.volume-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  background: #ddd;
+  border-radius: 5px;
+}
+
+/* Styles for IE */
+.volume-slider::-ms-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.volume-slider::-ms-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+.volume-slider {
+  width: 100px; /* Adjust as needed */
+  margin-top: 10px;
+  /* rest of the slider styling */
+}
+
+.bitcoinAd{
+  width: 470px;
+  height: 330px;
+  margin-left: 750px;
+  margin-top: 200px;
+  opacity: 0.2;
+}
+
+.bitcoinAd:hover {
+  opacity: 1.0;
+}
+
+.download-button {
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Styles for the volume slider */
+
+
+
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10%; /* Adjust width as needed */
+  height: 2px; /* Thinner track */
+  background: #999; /* Track color */
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  margin-bottom: 10px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px; /* Smaller thumb */
+  height: 15px; /* Smaller thumb */
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+/* Styles for the progress bar */
+.progress-bar {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10%;
+  height: 2px; /* Thinner track */
+  background: #999;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.progress-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.progress-bar::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+/* Additional Styles for the audio control labels */
+.audio-controls label {
+  display: block;
+  margin-bottom: 5px;
+  color: #fff; /* Adjust text color as needed */
+  font-size: 14px; /* Adjust font size as needed */
+}
+
+.audio-controls-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: white; /* or any color that fits your design */
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 1000; /* Ensure it stays on top */
+}
+
+
+
+
+.searchBar {
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 10px; /* Adjusted from 30px to 10px */
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  width: 300px; /* Adjusted to a fixed width */
+  box-sizing: border-box;
+  background-color: #121212;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  position: fixed; /* Ensure the search bar is fixed */
+  top: 20px; /* Position from the top */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center based on its own width */
+  z-index: 1001; /* Higher than .logobox to ensure it's clickable */
+}
+
+.searchBar::placeholder {
+  color: #ccc;
+}
+
+.searchBar:focus {
+  background-color: #000;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }

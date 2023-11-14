@@ -25,7 +25,7 @@ function AddSongForm() {
     })
     .then((response) => response.json())
     .then((data) => {
-      alert('Song uploaded', data);
+      console.log('Song uploaded', data);
       resetForm();
     })
     .catch((error) => {
@@ -81,7 +81,7 @@ function AddSongForm() {
           />
         </div>
 
-        <button type="submit">Upload Song</button>
+        <button className='uploadSongButton'  type="submit">Upload Song</button>
       </form>
     </div>
   );
