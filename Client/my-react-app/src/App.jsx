@@ -16,9 +16,6 @@ function App() {
       <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <div>
         <SongList searchTerm={searchTerm} />
-        <a href="https://i.imgur.com/mUl3pl2.gif">
-          <img className="bitcoinAd" src={bitcoinAd} alt="ad" />
-        </a>
       </div>
     </div>
   );
