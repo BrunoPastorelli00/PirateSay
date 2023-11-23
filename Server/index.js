@@ -5,7 +5,7 @@ const router = require("./router");
 const path = require("path");
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://localhost:3001", // This should match the URL of your React app
+  origin: "http://localhost:3000", // This should match the URL of your React app
 };
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

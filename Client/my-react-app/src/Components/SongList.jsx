@@ -8,7 +8,9 @@ function SongList({ searchTerm }) {
   const [isCurrentlyPlaying, setIsCurrentlyPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [previousSongs, setPreviousSongs] = useState([]);
   const audioRef = useRef(new Audio());
+
 
   const shuffleSongs = useCallback((array) => {
     let currentIndex = array.length,
@@ -43,6 +45,10 @@ function SongList({ searchTerm }) {
         setCurrentSong(songData);
         setVolume(0.5); // Set volume to 50% when a new song is loaded
         audioRef.current.volume = 0.5; // Also set the audio element's volume
+      
+        if (currentSong) {
+          setPreviousSongs((prevSongs) => [...prevSongs, currentSong]);
+        }
       }
 
       if (audioRef.current.paused) {
@@ -55,6 +61,14 @@ function SongList({ searchTerm }) {
     },
     [currentSong]
   );
+
+  const playPreviousSong = useCallback(() => {
+    if (previousSongs.length > 0) {
+      const lastSong = previousSongs[previousSongs.length - 1];
+      handlePlay(lastSong);
+      setPreviousSongs((prevSongs) => prevSongs.slice(0, -1));
+    }
+  }, [previousSongs, handlePlay]);
 
   const playNextSong = useCallback(() => {
     const currentSongIndex = songs.findIndex(
@@ -156,6 +170,9 @@ function SongList({ searchTerm }) {
           <Song
             songData={song}
             onPlay={() => handlePlay(song)}
+            onSkip={playNextSong}
+            onBack={playPreviousSong}
+            canGoBack={previousSongs.length > 0}
             isPlaying={isPlaying(song)}
             isLastPlayed={lastPlayed && song._id === lastPlayed._id}
             audioRef={audioRef}

@@ -136,14 +136,6 @@ body {
   padding: 2px 0; /* Reduced padding for a tighter layout */
 }
 
-.play-button {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 16px; /* Adjusted font size for play button */
-  cursor: pointer;
-}
-
 
 .play-button {
   background: none;
@@ -151,15 +143,18 @@ body {
   color: #fff;
   font-size: 20px;
   cursor: pointer;
+  padding: 10px;
+  transition: color 0.3s ease;
+ 
+}
+.play-button:hover, .download-button:hover {
+  color: #11FF46;
 }
 
 .song-container.playing {
   border: 3px solid #11FF46; /* Adjust the shadow size and spread as needed */
 }
 
-.play-pause-button {
-  background-color: rgb(11, 188, 188) ;
-}
 
 .volume-slider {
   width: 80px; /* Adjust as needed */
@@ -242,18 +237,16 @@ body {
 }
 
 .download-button {
-  background-color: #4CAF50; /* Green background */
   color: white;
   padding: 5px 5px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 10px;
+  font-size: 18px;
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 5px;
 }
-
 /* Styles for the volume slider */
 
 
@@ -367,4 +360,18 @@ body {
 .searchBar:focus {
   background-color: #000;
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.skip-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 10px;
+  transition: color 0.3s ease;
+}
+
+.skip-button:hover {
+  color: #11FF46;
 }

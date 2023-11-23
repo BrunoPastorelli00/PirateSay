@@ -1,4 +1,9 @@
-function Song({ songData, onPlay, isPlaying, isLastPlayed, audioRef }) {
+import { IoPlayOutline } from "react-icons/io5";
+import { IoPlayForwardOutline, IoPlayBackOutline } from "react-icons/io5";
+import { CiPause1 } from "react-icons/ci";
+import { FaDownload } from "react-icons/fa";
+
+function Song({ songData, onPlay, onSkip, onBack, isPlaying, isLastPlayed, canGoBack, audioRef }) {
   const songClass = isLastPlayed ? "song-container playing" : "song-container";
   const downloadSongUrl = `http://localhost:3232/uploads/${songData.songFile}`;
 
@@ -9,14 +14,38 @@ function Song({ songData, onPlay, isPlaying, isLastPlayed, audioRef }) {
         <p>{songData.artist}</p>
       </div>
       <div className="song-controls">
+        {canGoBack && (
+          <button
+            className="skip-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onBack();
+            }}
+          >
+            <IoPlayBackOutline />
+          </button>
+        )}
         <button
-          className="play-pause-button"
+          className="skip-button"
           onClick={(e) => {
             e.stopPropagation();
             onPlay(songData);
           }}
         >
-          {isPlaying ? "⏸️" : "▶️"}
+          {isPlaying ? <CiPause1 /> : <IoPlayOutline />}
+        </button>
+        <button
+          className="skip-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isPlaying) {
+              alert('No song is being played');
+            } else if (typeof onSkip === 'function') {
+              onSkip(songData);
+            }
+          }}
+        >
+          <IoPlayForwardOutline />
         </button>
         <a
           href={downloadSongUrl}
@@ -24,7 +53,7 @@ function Song({ songData, onPlay, isPlaying, isLastPlayed, audioRef }) {
           className="download-button"
           onClick={(e) => e.stopPropagation()}
         >
-          Download
+          <FaDownload />
         </a>
       </div>
     </div>
